@@ -73,11 +73,19 @@ namespace BussinesLogic.Implementations
             switch (userType)
             {
                 case UserType.CLIENT:
-                    return await dbService.GetRides(new QueryRideParams()
                     {
-                        ClientEmail = userEmail,
-                        Status = RideStatus.COMPLETED
-                    });
+                        var clientRides = new List<Ride>();
+                        foreach (RideStatus status in Enum.GetValues(typeof(RideStatus)))
+                        {
+                            var rides = await dbService.GetRides(new QueryRideParams()
+                            {
+                                ClientEmail = userEmail,
+                                Status = RideStatus.COMPLETED
+                            });
+                            clientRides.AddRange(rides);
+                        }
+                        return clientRides;
+                    }
                 case UserType.DRIVER:
                     return await dbService.GetRides(new QueryRideParams()
                     {

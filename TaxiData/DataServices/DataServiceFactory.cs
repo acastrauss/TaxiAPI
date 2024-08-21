@@ -83,14 +83,14 @@ namespace TaxiData.DataServices
             await AuthDataService.SyncAzureTablesWithDict();
             await DriverDataService.SyncAzureTablesWithDict();
             await RideDataService.SyncAzureTablesWithDict();
-            await DriverDataService.SyncAzureTablesWithDict();
+            await DriverRatingDataService.SyncAzureTablesWithDict();
         }
         public async Task SyncDictWithAzureTable()
         {
             await AuthDataService.SyncDictWithAzureTable();
             await DriverDataService.SyncDictWithAzureTable();
             await RideDataService.SyncDictWithAzureTable();
-            await DriverDataService.SyncDictWithAzureTable();
+            await DriverRatingDataService.SyncDictWithAzureTable();
         }
     }
 }
