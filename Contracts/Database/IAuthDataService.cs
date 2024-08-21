@@ -29,6 +29,6 @@ namespace Contracts.Database
         Task<bool> CreateUser(UserProfile appModel);
 
         [OperationContract]
-        Task<bool> ExistsSocialMediaAuth(string partitionKey, string rowKey);\
+        Task<bool> ExistsSocialMediaAuth(string partitionKey, string rowKey);
     }
 }

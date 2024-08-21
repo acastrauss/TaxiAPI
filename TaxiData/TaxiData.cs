@@ -139,15 +139,11 @@ namespace TaxiData
 
             await SyncDictWithAzureTable();
 
-            var periodicTask = RunPeriodicalUpdate(cancellationToken);
+            int syncCnt = 0;
 
             while (true)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    await periodicTask;
-                }
-
+               
                 cancellationToken.ThrowIfCancellationRequested();
 
                 using (var tx = this.StateManager.CreateTransaction())
@@ -164,7 +160,11 @@ namespace TaxiData
                     await tx.CommitAsync();
                 }
 
-                await SyncAzureTablesWithDict();
+                if(syncCnt++ % 20 == 0)
+                {
+                    await SyncAzureTablesWithDict();
+                    syncCnt = 0;
+                }
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 

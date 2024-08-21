@@ -18,7 +18,8 @@ namespace BussinesLogic.Implementations
 
         public async Task<Ride> CreateRide(CreateRideRequest request, string clientEmail)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
+            now = DateTime.SpecifyKind(now, DateTimeKind.Utc);
             var unixTimestamp = new DateTimeOffset(now).ToUnixTimeMilliseconds();
 
             var newRide = new Models.Ride.Ride()
