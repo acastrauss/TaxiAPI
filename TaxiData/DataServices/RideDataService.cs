@@ -13,7 +13,7 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class RideDataService : BaseDataService<Models.Ride.Ride, AzureInterface.Entities.Ride>
+    internal class RideDataService : BaseDataService<Models.Ride.Ride, AzureInterface.Entities.Ride>, Contracts.Database.IRideDataService
     {
         public RideDataService(
             AzureTableCRUD<AzureInterface.Entities.Ride> storageWrapper, 

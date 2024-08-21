@@ -10,9 +10,9 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class DriverRatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureInterface.Entities.RideRating>
+    internal class RatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureInterface.Entities.RideRating>, Contracts.Database.IRatingDataService
     {
-        public DriverRatingDataService(
+        public RatingDataService(
             AzureTableCRUD<AzureInterface.Entities.RideRating> storageWrapper, 
             IDTOConverter<AzureInterface.Entities.RideRating, 
             Models.UserTypes.RideRating> converter, 

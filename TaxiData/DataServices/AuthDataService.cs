@@ -13,7 +13,7 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureInterface.Entities.User>
+    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureInterface.Entities.User>, Contracts.Database.IAuthDataService
     {
         public AuthDataService(
             AzureTableCRUD<User> storageWrapper,
@@ -114,6 +114,11 @@ namespace TaxiData.DataServices
             var dictKey = $"{appModel.Type}{appModel.Email}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, appModel, (key, value) => value);
             return created != null;
+        }
+
+        public async Task<bool> CreateUser(UserProfile appModel)
+        {
+            return await Create(appModel);
         }
     }
 }

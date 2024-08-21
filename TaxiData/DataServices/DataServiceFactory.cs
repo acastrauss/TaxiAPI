@@ -16,7 +16,7 @@ namespace TaxiData.DataServices
         public AuthDataService AuthDataService { get; private set; }
         public DriverDataService DriverDataService { get; private set; }
         public RideDataService RideDataService { get; private set; }
-        public DriverRatingDataService DriverRatingDataService { get; private set; }
+        public RatingDataService DriverRatingDataService { get; private set; }
 
         public DataServiceFactory(
             IReliableStateManager stateManager,
@@ -65,7 +65,7 @@ namespace TaxiData.DataServices
             );
 
             var driverRatingDto = new DriverRatingDTO();
-            DriverRatingDataService = new DriverRatingDataService(
+            DriverRatingDataService = new RatingDataService(
                 driverRatingStorageWrapper,
                 driverRatingDto,
                 new DataImplementations.Synchronizer<RideRating, Models.UserTypes.RideRating>(

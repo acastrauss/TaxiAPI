@@ -13,7 +13,7 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureInterface.Entities.Driver>
+    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureInterface.Entities.Driver>, Contracts.Database.IDriverDataService
     {
         public DriverDataService(
             AzureTableCRUD<AzureInterface.Entities.Driver> storageWrapper, 
@@ -83,6 +83,11 @@ namespace TaxiData.DataServices
             var dictKey = $"{driver.Type}{driver.Email}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, driver, (key, value) => value);
             return created != null;
+        }
+
+        public async Task<bool> CreateDriver(Driver appModel)
+        {
+            return await Create(appModel);
         }
     }
 }
