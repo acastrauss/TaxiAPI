@@ -136,8 +136,6 @@ namespace TaxiWeb
                             };
                         });
                         
-                        builder.Services.AddSignalR();
-                        
                         // Add services to the container.
                         
                         builder.Services.AddControllers();
@@ -147,10 +145,6 @@ namespace TaxiWeb
                         app.UseCors("CorsPolicy");
                         app.UseAuthentication();
                         app.UseAuthorization();
-                        app.UseEndpoints(endpoints =>
-                        {
-                            endpoints.MapHub<ChatHub>("/chathub");
-                        });
                         // Configure the HTTP request pipeline.
                         
                         app.MapControllers();

@@ -9,7 +9,6 @@ using Models.Auth;
 using Models.UserTypes;
 using Models.Ride;
 using Models.Email;
-using Models.Chat;
 
 namespace Contracts.Logic
 {
@@ -72,14 +71,6 @@ namespace Contracts.Logic
 
         [OperationContract]
         Task<bool> SendEmail(SendEmailRequest sendEmailRequest);
-        #endregion
-
-        #region ChatMethods
-        [OperationContract]
-        Task<Chat> CreateNewOrGetExistingChat(Models.Chat.Chat chat);
-
-        [OperationContract]
-        Task<ChatMessage> AddNewMessageToChat(Models.Chat.ChatMessage message);
         #endregion
 
         [OperationContract]
