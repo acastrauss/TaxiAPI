@@ -1,5 +1,5 @@
-﻿using AzureStorageWrapper.DTO;
-using AzureStorageWrapper.Entities;
+﻿using AzureInterface.DTO;
+using AzureInterface.Entities;
 using Microsoft.ServiceFabric.Data;
 using Models;
 using Models.Auth;
@@ -20,10 +20,10 @@ namespace TaxiData.DataServices
 
         public DataServiceFactory(
             IReliableStateManager stateManager,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.User> userStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Driver> driverStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Ride> rideStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.RideRating> driverRatingStorageWrapper
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.User> userStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Driver> driverStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Ride> rideStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.RideRating> driverRatingStorageWrapper
         ) 
         {
             var userDto = new UserDTO();

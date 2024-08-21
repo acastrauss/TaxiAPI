@@ -1,6 +1,7 @@
-﻿using AzureStorageWrapper;
-using AzureStorageWrapper.DTO;
-using AzureStorageWrapper.Entities;
+﻿using Azure.Data.Tables;
+using AzureInterface;
+using AzureInterface.DTO;
+using AzureInterface.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models;
@@ -14,15 +15,15 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : AzureBaseEntity
+    internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : class, ITableEntity
     {
-        protected AzureStorageWrapper.TablesOperations<T2> storageWrapper;
+        protected AzureInterface.AzureTableCRUD<T2> storageWrapper;
         protected IDTOConverter<T2,  T1> converter;
         protected readonly Synchronizer<T2, T1> synchronizer;
         protected readonly IReliableStateManager stateManager;
 
         public BaseDataService(
-            TablesOperations<T2> storageWrapper,
+            AzureTableCRUD<T2> storageWrapper,
             IDTOConverter<T2, T1> converter,
             Synchronizer<T2, T1> synchronizer,
             IReliableStateManager stateManager

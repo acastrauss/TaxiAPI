@@ -1,6 +1,6 @@
-﻿using AzureStorageWrapper;
-using AzureStorageWrapper.DTO;
-using AzureStorageWrapper.Entities;
+﻿using AzureInterface;
+using AzureInterface.DTO;
+using AzureInterface.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;
@@ -13,10 +13,10 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureStorageWrapper.Entities.User>
+    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureInterface.Entities.User>
     {
         public AuthDataService(
-            TablesOperations<User> storageWrapper,
+            AzureTableCRUD<User> storageWrapper,
             IDTOConverter<User, UserProfile> converter,
             Synchronizer<User, UserProfile> synchronizer,
             IReliableStateManager stateManager

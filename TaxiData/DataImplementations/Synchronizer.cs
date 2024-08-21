@@ -1,6 +1,7 @@
-﻿using AzureStorageWrapper;
-using AzureStorageWrapper.DTO;
-using AzureStorageWrapper.Entities;
+﻿using Azure.Data.Tables;
+using AzureInterface;
+using AzureInterface.DTO;
+using AzureInterface.Entities;
 using Microsoft.ServiceFabric.Data.Collections;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace TaxiData.DataImplementations
 {
-    internal class Synchronizer<T1, T2> where T1 : AzureBaseEntity 
+    internal class Synchronizer<T1, T2> where T1 : class, ITableEntity 
     {
-        private TablesOperations<T1> storageWrapper;
+        private AzureTableCRUD<T1> storageWrapper;
         private string ReliableDictName;
         private IDTOConverter<T1, T2> converter;
         private Microsoft.ServiceFabric.Data.IReliableStateManager StateManager;
 
-        public Synchronizer(TablesOperations<T1> storageWrapper, string realiableDictName, IDTOConverter<T1, T2> converter, Microsoft.ServiceFabric.Data.IReliableStateManager stateManager)
+        public Synchronizer(AzureTableCRUD<T1> storageWrapper, string realiableDictName, IDTOConverter<T1, T2> converter, Microsoft.ServiceFabric.Data.IReliableStateManager stateManager)
         {
             this.storageWrapper = storageWrapper;
             this.ReliableDictName = realiableDictName;
@@ -48,13 +49,13 @@ namespace TaxiData.DataImplementations
 
             if (entitiesToSync.Count > 0)
             {
-                await storageWrapper.AddOrUpdateMultiple(entitiesToSync);
+                await storageWrapper.AddOrUpdateMultipleEntities(entitiesToSync);
             }
         }
 
         public async Task SyncDictWithAzureTable()
         {
-            var azureTableEntities = storageWrapper.GetAll();
+            var azureTableEntities = storageWrapper.GetAllEntities();
             if(azureTableEntities == null)
             {
                 return;

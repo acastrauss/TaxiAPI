@@ -1,4 +1,4 @@
-﻿using AzureStorageWrapper.Entities;
+﻿using AzureInterface.Entities;
 using Models.Auth;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.DTO
+namespace AzureInterface.DTO
 {
     public class UserDTO : IDTOConverter<Entities.User, Models.Auth.UserProfile>
     {

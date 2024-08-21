@@ -90,7 +90,7 @@ namespace TaxiWeb
                         var jwtSecret = builder.Configuration.GetSection("JWT").GetValue<string>("Secret");
 
                         var azureConnString = builder.Configuration.GetSection("AzureStorage").GetValue<string>("ConnectionString");
-                        builder.Services.AddSingleton<Contracts.Blob.IBlob>(new AzureStorageWrapper.BlobOperations(azureConnString, "profile-images"));
+                        builder.Services.AddSingleton<Contracts.Blob.IBlob>(new AzureInterface.AzureBlobCRUD(azureConnString, "profile-images"));
 
                         builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
                         

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.DTO
+namespace AzureInterface.DTO
 {
     public class DriverDTO : IDTOConverter<Entities.Driver, Models.UserTypes.Driver>
     {

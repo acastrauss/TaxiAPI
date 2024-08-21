@@ -1,15 +1,21 @@
-﻿using System;
+﻿using Azure;
+using Azure.Data.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.Entities
+namespace AzureInterface.Entities
 {
-    public class Ride : AzureBaseEntity
+    public class Ride : ITableEntity
     {
-        public Ride(): base(string.Empty, string.Empty) { }
-        public Ride(string partitionKey, string rowKey): base(partitionKey, rowKey) { }
+        public Ride() { }
+        public Ride(string partitionKey, string rowKey) 
+        {
+            PartitionKey = partitionKey;
+            RowKey = rowKey;
+        }
     
         // Row Key
         public long CreatedAtTimestamp { get; set; }
@@ -22,5 +28,9 @@ namespace AzureStorageWrapper.Entities
         public float Price { get; set; }
         public DateTime EstimatedDriverArrival { get; set; }
         public DateTime? EstimatedRideEnd { get; set; }
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
+        public ETag ETag { get; set; }
     }
 }

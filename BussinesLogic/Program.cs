@@ -38,7 +38,12 @@ namespace BussinesLogic
                         var gmailSendFromMail = gmailConfigSection.Parameters["GmailSendFrom"].Value;
                         var emailService = new EmailService(gmailSendFromMail, gmailAppPassword);
 
-                        return new BussinesLogic(context, authDBProxy, emailService);
+                        var authService = new Implementations.AuthLogic(authDBProxy);
+                        var driverService = new Implementations.DriverLogic(authDBProxy);
+                        var rideService = new Implementations.RideLogic(authDBProxy);
+                        var ratingService = new Implementations.RatingLogic(authDBProxy, rideService);
+
+                        return new BussinesLogic(context, emailService, authService, driverService, rideService, ratingService);
                     }).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(BussinesLogic).Name);

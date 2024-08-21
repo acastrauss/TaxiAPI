@@ -9,75 +9,11 @@ using Models.Auth;
 using Models.UserTypes;
 using Models.Ride;
 using Models.Email;
+using Contracts.Email;
 
 namespace Contracts.Logic
 {
     [ServiceContract]
-    public interface IBussinesLogic : IService
-    {
-        #region AuthAndUserMethods
-        [OperationContract]
-        Task<Tuple<bool, UserType>> Login(LoginData loginData);
-
-        [OperationContract]
-        Task<bool> Register(UserProfile userProfile);
-
-        [OperationContract]
-        Task<UserProfile> GetUserProfile(string userEmail, UserType userType);
-
-        [OperationContract]
-        Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, string userEmail, UserType userType);
-
-        #endregion
-
-        #region DriverMethods
-        [OperationContract]
-        Task<DriverStatus> GetDriverStatus(string driverEmail);
-
-        [OperationContract]
-        Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status);
-
-        [OperationContract]
-        Task<IEnumerable<Driver>> ListAllDrivers();
-
-        #endregion
-        
-        #region RideMethods
-
-        [OperationContract]
-        Task<EstimateRideResponse> EstimateRide(EstimateRideRequest request);
-
-        [OperationContract]
-        Task<Ride> CreateRide(CreateRideRequest request, string clientEmail);
-
-        [OperationContract]
-        Task<Ride> UpdateRide(UpdateRideRequest request, string driverEmail);
-
-        [OperationContract]
-        Task<IEnumerable<Ride>> GetNewRides();
-
-        [OperationContract]
-        Task<IEnumerable<Ride>> GetUsersRides(string userEmail, UserType userType);
-
-        [OperationContract]
-        Task<IEnumerable<Ride>> GetAllRides();
-
-        [OperationContract]
-        Task<Ride> GetRideStatus(string clientEmail, long rideCreatedAtTimestamp);
-
-        #endregion
-        
-        #region EmailMethods
-
-        [OperationContract]
-        Task<bool> SendEmail(SendEmailRequest sendEmailRequest);
-        #endregion
-
-        [OperationContract]
-        Task<RideRating> RateDriver(RideRating driverRating);
-
-        [OperationContract]
-        Task<float> GetAverageRatingForDriver(string driverEmail);
-
-    }
+    public interface IBussinesLogic : IAuthLogic, IDriverLogic, IRideLogic, IEmailService, IRatingLogic
+    {}
 }

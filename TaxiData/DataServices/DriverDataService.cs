@@ -1,5 +1,5 @@
-﻿using AzureStorageWrapper;
-using AzureStorageWrapper.DTO;
+﻿using AzureInterface;
+using AzureInterface.DTO;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;
@@ -13,12 +13,12 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureStorageWrapper.Entities.Driver>
+    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureInterface.Entities.Driver>
     {
         public DriverDataService(
-            TablesOperations<AzureStorageWrapper.Entities.Driver> storageWrapper, 
-            IDTOConverter<AzureStorageWrapper.Entities.Driver, Models.UserTypes.Driver> converter, 
-            Synchronizer<AzureStorageWrapper.Entities.Driver, Models.UserTypes.Driver> synchronizer,
+            AzureTableCRUD<AzureInterface.Entities.Driver> storageWrapper, 
+            IDTOConverter<AzureInterface.Entities.Driver, Models.UserTypes.Driver> converter, 
+            Synchronizer<AzureInterface.Entities.Driver, Models.UserTypes.Driver> synchronizer,
             IReliableStateManager stateManager
         ) : base(storageWrapper, converter, synchronizer, stateManager)
         {}

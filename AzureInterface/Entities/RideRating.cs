@@ -3,27 +3,28 @@ using Azure.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.Entities
+namespace AzureInterface.Entities
 {
-    public abstract class AzureBaseEntity : ITableEntity
+    public class RideRating : ITableEntity
     {
-        protected AzureBaseEntity(string partitionKey, string rowKey)
+        public RideRating() {}
+        public RideRating(string partitionKey, string rowKey) 
         {
             PartitionKey = partitionKey;
             RowKey = rowKey;
         }
 
+        public string ClientEmail { get; set; }
+        public long RideTimestamp { get; set; }
+        public string DriverEmail { get; set; }
+        public int Value { get; set; }
         public string PartitionKey { get; set; }
         public string RowKey { get; set; }
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
-
-        public virtual string GetStatefulDictKey()
-        {
-            return $"{PartitionKey}{RowKey}";
-        }
     }
 }

@@ -24,31 +24,44 @@ namespace BussinesLogic
     /// </summary>
     internal sealed class BussinesLogic : StatelessService, IBussinesLogic
     {
-        private IData authDBService;
         private IEmailService emailService;
 
-        public BussinesLogic(StatelessServiceContext context, IData authDBService, IEmailService emailService)
+        private IAuthLogic authLogic;
+        private IDriverLogic driverLogic;
+        private IRideLogic rideLogic;
+        private IRatingLogic ratingLogic;
+        public BussinesLogic(
+            StatelessServiceContext context, 
+            IEmailService emailService,
+            IAuthLogic authLogic,
+            IDriverLogic driverLogic,
+            IRideLogic rideLogic,
+            IRatingLogic ratingLogic
+            )
             : base(context)
         {
-            this.authDBService = authDBService;
             this.emailService = emailService;
+            this.authLogic = authLogic;
+            this.driverLogic = driverLogic;
+            this.rideLogic = rideLogic;
+            this.ratingLogic = ratingLogic;
         }
 
         #region DriverMethods
 
         public async Task<DriverStatus> GetDriverStatus(string driverEmail)
         {
-            return await authDBService.GetDriverStatus(driverEmail);
+            return await driverLogic.GetDriverStatus(driverEmail);
         }
 
         public async Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status)
         {
-            return await authDBService.UpdateDriverStatus(driverEmail, status);
+            return await driverLogic.UpdateDriverStatus(driverEmail, status);
         }
 
         public async Task<IEnumerable<Driver>> ListAllDrivers()
         {
-            return await authDBService.ListAllDrivers();
+            return await driverLogic.ListAllDrivers();
         }
 
         #endregion
@@ -57,59 +70,22 @@ namespace BussinesLogic
 
         public async Task<Tuple<bool, UserType>> Login(LoginData loginData)
         {
-            bool exists = false;
-            foreach (UserType type in Enum.GetValues(typeof(UserType)))
-            {
-                if (loginData.authType == AuthType.TRADITIONAL)
-                {
-                    exists |= await authDBService.ExistsWithPwd(type.ToString(), loginData.Email, loginData.Password);
-                }
-                // Google Auth
-                else
-                {
-                    exists |= await authDBService.ExistsSocialMediaAuth(type.ToString(), loginData.Email);
-                }
-
-                if (exists)
-                {
-                    return Tuple.Create(exists, type);
-                }
-            }
-
-            return Tuple.Create<bool, UserType>(exists, default);
+            return await authLogic.Login(loginData);
         }
 
         public async Task<bool> Register(UserProfile userProfile)
         {
-            var userExists = false;
-            foreach (UserType type in Enum.GetValues(typeof(UserType)))
-            {
-                userExists |= await authDBService.Exists(type.ToString(), userProfile.Email);
-            }
-
-            if (userExists)
-            {
-                return false;
-            }
-
-            if(userProfile.Type == UserType.DRIVER)
-            {
-                var newDriver = new Models.UserTypes.Driver(userProfile, Models.UserTypes.DriverStatus.NOT_VERIFIED);
-                return await authDBService.CreateDriver(newDriver);
-            }
-
-            return await authDBService.CreateUser(userProfile);
+            return await authLogic.Register(userProfile);
         }
-
 
         public async Task<UserProfile> GetUserProfile(string userEmail, UserType userType)
         {
-            return await authDBService.GetUserProfile(userType.ToString(), userEmail);
+            return await authLogic.GetUserProfile(userEmail, userType);
         }
 
         public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, string userEmail, UserType userType)
         {
-            return await authDBService.UpdateUserProfile(updateUserProfileRequest, userType.ToString(), userEmail);
+            return await authLogic.UpdateUserProfile(updateUserProfileRequest, userEmail, userType);
         }
 
         #endregion
@@ -146,98 +122,39 @@ namespace BussinesLogic
 
         #region RideMethods
 
-        public Task<EstimateRideResponse> EstimateRide(EstimateRideRequest request)
+        public async Task<EstimateRideResponse> EstimateRide(EstimateRideRequest request)
         {
-            var randomGen = new Random();
-
-            return Task.FromResult(
-                new EstimateRideResponse()
-                {
-                    PriceEstimate = randomGen.NextSingle() * 1000,
-                    EstimatedDriverArrivalSeconds = randomGen.Next(60) + 60 // Max 1 hour
-                });
+            return await rideLogic.EstimateRide(request);
         }
 
         public async Task<Ride> CreateRide(CreateRideRequest request, string clientEmail)
         {
-            var now = DateTime.Now;
-            var unixTimestamp = new DateTimeOffset(now).ToUnixTimeMilliseconds();
-
-            var newRide = new Models.Ride.Ride()
-            {
-                ClientEmail = clientEmail,
-                CreatedAtTimestamp = unixTimestamp,
-                DriverEmail = null,
-                EndAddress = request.EndAddress,
-                StartAddress = request.StartAddress,
-                Price = request.Price,
-                Status = RideStatus.CREATED,
-                EstimatedDriverArrival = now.AddSeconds(request.EstimatedDriverArrivalSeconds),
-                EstimatedRideEnd = null
-            };
-
-            return await authDBService.CreateRide(newRide);
+            return await rideLogic.CreateRide(request, clientEmail);
         }
 
         public async Task<Ride> UpdateRide(UpdateRideRequest request, string driverEmail)
         {
-            // Driver accepted the ride
-            if (request.Status == RideStatus.ACCEPTED)
-            {
-                var randomGen = new Random();
-
-                var rideWithTimeEstimate = new Models.Ride.UpdateRideWithTimeEstimate()
-                {
-                    ClientEmail = request.ClientEmail,
-                    RideCreatedAtTimestamp = request.RideCreatedAtTimestamp,
-                    Status = request.Status,
-                    RideEstimateSeconds = randomGen.Next(60)
-                };
-
-                return await authDBService.UpdateRide(rideWithTimeEstimate, driverEmail);
-            }
-
-            return await authDBService.UpdateRide(request, driverEmail);
+            return await rideLogic.UpdateRide(request, driverEmail);
         }
 
         public async Task<IEnumerable<Ride>> GetNewRides()
         {
-            return await authDBService.GetRides(new QueryRideParams()
-            {
-                Status = RideStatus.CREATED
-            });
+            return await rideLogic.GetNewRides();
         }
 
         public async Task<IEnumerable<Ride>> GetUsersRides(string userEmail, UserType userType)
         {
-            switch (userType)
-            {
-                case UserType.CLIENT:
-                    return await authDBService.GetRides(new QueryRideParams()
-                    {
-                        ClientEmail = userEmail,
-                        Status = RideStatus.COMPLETED
-                    });
-                case UserType.DRIVER:
-                    return await authDBService.GetRides(new QueryRideParams()
-                    {
-                        DriverEmail = userEmail,
-                        Status = RideStatus.COMPLETED
-                    });
-                case UserType.ADMIN:
-                default:
-                    return await GetAllRides();
-            }
+            return await rideLogic.GetUsersRides(userEmail, userType);
         }
 
         public async Task<IEnumerable<Ride>> GetAllRides()
         {
-            return await authDBService.GetRides(default);
+            return await rideLogic.GetAllRides();
         }
 
         public async Task<Ride> GetRideStatus(string clientEmail, long rideCreatedAtTimestamp)
         {
-            return await authDBService.GetRide(clientEmail, rideCreatedAtTimestamp);
+            return await rideLogic.GetRideStatus(clientEmail, rideCreatedAtTimestamp);
         }
         #endregion
 
@@ -245,30 +162,21 @@ namespace BussinesLogic
 
         public async Task<bool> SendEmail(SendEmailRequest sendEmailRequest)
         {
-            return this.emailService.SendEmail(sendEmailRequest);
+            return await emailService.SendEmail(sendEmailRequest);
         }
 
 
         #endregion
 
         #region DriverRatingMethods
-
-
         public async Task<RideRating> RateDriver(RideRating driverRating)
         {
-            var userRides = await GetUsersRides(driverRating.ClientEmail, UserType.CLIENT);
-            var userHasThisRide = userRides.Any((ride) => ride.CreatedAtTimestamp == driverRating.RideTimestamp);    
-            if (!userHasThisRide) 
-            {
-                return null;
-            }
-
-            return await authDBService.RateDriver(driverRating);
+            return await ratingLogic.RateDriver(driverRating);
         }
 
         public async Task<float> GetAverageRatingForDriver(string driverEmail)
         {
-            return await authDBService.GetAverageRatingForDriver(driverEmail);
+            return await ratingLogic.GetAverageRatingForDriver(driverEmail);
         }
 
         #endregion

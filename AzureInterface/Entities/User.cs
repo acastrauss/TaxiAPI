@@ -7,13 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.Entities
+namespace AzureInterface.Entities
 {
-    public class User : AzureBaseEntity
+    public class User : ITableEntity
     {
-        public User(): base("ADMIN", "NONE") { }
-        public User(string username, string email, string password, string fullname, DateTime dateOfBirth, string address, UserType type, string imagePath) : base(Enum.GetName(typeof(UserType), type)!, email)
+        public User() { }
+        public User(string username, string email, string password, string fullname, DateTime dateOfBirth, string address, UserType type, string imagePath)
         {
+            PartitionKey = type.ToString();
+            RowKey = email;
             Username = username;
             Email = email;
             Password = password;
@@ -32,5 +34,9 @@ namespace AzureStorageWrapper.Entities
         public string Address { get; set; } = string.Empty;
         public int Type { get; set; }
         public string ImagePath { get; set; } = string.Empty;
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
+        public ETag ETag { get; set; }
     }
 }

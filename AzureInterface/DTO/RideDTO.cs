@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper.DTO
+namespace AzureInterface.DTO
 {
     public class RideDTO : IDTOConverter<Entities.Ride, Models.Ride.Ride>
     {

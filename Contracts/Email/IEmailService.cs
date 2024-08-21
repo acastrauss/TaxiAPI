@@ -9,6 +9,6 @@ namespace Contracts.Email
 {
     public interface IEmailService
     {
-        bool SendEmail(Models.Email.SendEmailRequest sendEmailRequest);
+        Task<bool> SendEmail(Models.Email.SendEmailRequest sendEmailRequest);
     }
 }

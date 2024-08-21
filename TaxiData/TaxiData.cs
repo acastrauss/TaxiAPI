@@ -10,7 +10,7 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Models.Auth;
-using AzureStorageWrapper.DTO;
+using AzureInterface.DTO;
 using TaxiData.DataImplementations;
 using Models.UserTypes;
 using Models.Ride;
@@ -27,10 +27,10 @@ namespace TaxiData
 
         public TaxiData(
             StatefulServiceContext context,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.User> userStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Driver> driverStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Ride> rideStorageWrapper,
-            AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.RideRating> driverRatingWrapper
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.User> userStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Driver> driverStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Ride> rideStorageWrapper,
+            AzureInterface.AzureTableCRUD<AzureInterface.Entities.RideRating> driverRatingWrapper
         )
             : base(context)
         {

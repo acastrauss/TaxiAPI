@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzureStorageWrapper\AzureStorageWrapper.csproj" />
+    <ProjectReference Include="..\AzureInterface\AzureInterface.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
-﻿using AzureStorageWrapper;
-using AzureStorageWrapper.DTO;
+﻿using AzureInterface;
+using AzureInterface.DTO;
 using Microsoft.ServiceFabric.Data;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,13 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class DriverRatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureStorageWrapper.Entities.RideRating>
+    internal class DriverRatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureInterface.Entities.RideRating>
     {
         public DriverRatingDataService(
-            TablesOperations<AzureStorageWrapper.Entities.RideRating> storageWrapper, 
-            IDTOConverter<AzureStorageWrapper.Entities.RideRating, 
+            AzureTableCRUD<AzureInterface.Entities.RideRating> storageWrapper, 
+            IDTOConverter<AzureInterface.Entities.RideRating, 
             Models.UserTypes.RideRating> converter, 
-            Synchronizer<AzureStorageWrapper.Entities.RideRating, 
+            Synchronizer<AzureInterface.Entities.RideRating, 
             Models.UserTypes.RideRating> synchronizer, 
             IReliableStateManager stateManager
         ) : base(storageWrapper, converter, synchronizer, stateManager)

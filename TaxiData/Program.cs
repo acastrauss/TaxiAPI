@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Fabric.Management.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using AzureStorageWrapper.DTO;
+using AzureInterface.DTO;
 using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace TaxiData
@@ -31,16 +31,16 @@ namespace TaxiData
                             .Parameters["AzureTableConnectionString"].Value;
 
                         var userStorageWrapper = 
-                            new AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.User>(azureTableConnString, "user");
+                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.User>(azureTableConnString, "user");
 
                         var driverStorageWrapper =
-                            new AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Driver>(azureTableConnString, "driver");
+                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.Driver>(azureTableConnString, "driver");
 
                         var rideStorageWrapper =
-                            new AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.Ride>(azureTableConnString, "ride");
+                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.Ride>(azureTableConnString, "ride");
 
                         var driverRatingStorageWrapper =
-                            new AzureStorageWrapper.TablesOperations<AzureStorageWrapper.Entities.RideRating>(azureTableConnString, "rating");
+                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.RideRating>(azureTableConnString, "rating");
 
 
                         return new TaxiData(context, userStorageWrapper, driverStorageWrapper, rideStorageWrapper, driverRatingStorageWrapper);

@@ -21,7 +21,7 @@ namespace BussinesLogic.Email
             EmailFromPassword = emailFromPassword;
         }
 
-        public bool SendEmail(SendEmailRequest sendEmailRequest)
+        public async Task<bool> SendEmail(SendEmailRequest sendEmailRequest)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.EnableSsl = true;

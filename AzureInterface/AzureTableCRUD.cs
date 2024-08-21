@@ -1,32 +1,32 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 using Azure.Storage;
-using AzureStorageWrapper.Entities;
+using AzureInterface.Entities;
 using System.Collections.Concurrent;
 using System.Xml;
 
-namespace AzureStorageWrapper
+namespace AzureInterface
 {
-    public class TablesOperations<T> where T : class, ITableEntity
+    public class AzureTableCRUD<T> where T : class, ITableEntity
     {
         private readonly TableClient tableClient;
         private string connectionString;
         private string tableName;
 
-        public TablesOperations(string connectionString, string tableName)
+        public AzureTableCRUD(string connectionString, string tableName)
         {
             this.tableClient = new TableClient(connectionString, tableName);
             this.connectionString = connectionString;
             this.tableName = tableName;
-            Init();
+            InitTable();
         }
 
-        protected virtual void Init()
+        protected virtual void InitTable()
         {
             tableClient.CreateIfNotExists();
         }
 
-        public async Task<T> Create(T entity)
+        public async Task<T> CreateEntity(T entity)
         {
             var res = await this.tableClient.AddEntityAsync(entity);
             if (res.IsError)
@@ -37,7 +37,7 @@ namespace AzureStorageWrapper
             return entity;
         }
 
-        public async Task AddOrUpdateMultiple(IEnumerable<T> entities)
+        public async Task AddOrUpdateMultipleEntities(IEnumerable<T> entities)
         {
             foreach (var entity in entities)
             {
@@ -64,7 +64,7 @@ namespace AzureStorageWrapper
             return res.HasValue ? res.Value : default;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAllEntities()
         {
             return tableClient.Query<T>().AsEnumerable();
         }

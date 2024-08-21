@@ -1,4 +1,4 @@
-﻿using AzureStorageWrapper;
+﻿using AzureInterface;
 using Contracts.Blob;
 using Contracts.Logic;
 using Microsoft.AspNetCore.Authorization;

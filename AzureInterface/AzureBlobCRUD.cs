@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureStorageWrapper
+namespace AzureInterface
 {
-    public class BlobOperations : Contracts.Blob.IBlob
+    public class AzureBlobCRUD : Contracts.Blob.IBlob
     {
         private readonly BlobServiceClient blobServiceClient;
         private readonly BlobContainerClient blobContainerClient;
         private readonly string containerName;
 
-        public BlobOperations(string storageUri, string containerName)
+        public AzureBlobCRUD(string storageUri, string containerName)
         {
             blobServiceClient = new BlobServiceClient(storageUri);
             this.containerName = containerName;
